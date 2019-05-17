@@ -1,5 +1,4 @@
 import firebase from '@/firebase';
-import db from '@/db';
 
 const state = {
   isLoggedIn: false,
@@ -8,33 +7,39 @@ const state = {
 
 const mutations = {
   SET_USER(state, user) {
-    state.user = user;
+    if (user) {
+      state.user = user;
+    } else {
+      state.user = {};
+    }
   },
   LOGIN_USER(state) {
     state.isLoggedIn = true;
   },
-};
-
-const actions = {
-  async login({ commit }) {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const { user } = await firebase.auth().signInWithPopup(provider);
-    const setUser = {
-      id: user.uid,
-      name: user.displayName,
-      image: user.photoURL,
-      created_at: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-    db.collection('users')
-      .doc(setUser.id)
-      .set(setUser);
-
-    commit('SET_USER', setUser);
-    commit('LOGIN_USER');
+  LOGOUT_USER(state) {
+    state.isLoggedIn = false;
   },
 };
 
-const getters = {};
+const actions = {
+  async login() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await firebase.auth().signInWithPopup(provider);
+  },
+  async logout({ commit }) {
+    await firebase.auth().signOut();
+    commit('LOGOUT_USER');
+  },
+};
+
+const getters = {
+  getUser(state) {
+    return {
+      user: state.user,
+      isLoggedIn: state.isLoggedIn,
+    };
+  },
+};
 
 export default {
   namespaced: true,
