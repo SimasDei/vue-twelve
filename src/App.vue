@@ -1,11 +1,21 @@
 <template>
   <div id="app">
-    <router-view/>
+    <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <router-link class="navbar-item" to="/">Vue Twelve</router-link>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    </nav>
+    <router-view class="container main"/>
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+.main {
+  margin-top: 2em;
 }
 </style>
